@@ -4,7 +4,7 @@
   "description": "The Codebreeze website",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc && node dist/fetch-contents-from-trello.js"
+    "build": "npx tsc && mkdir -p web && node dist/fetch-contents-from-trello.js"
   },
   "repository": {
     "type": "git",
