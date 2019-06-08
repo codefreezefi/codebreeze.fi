@@ -1,0 +1,60 @@
+{
+  "name": "@codefreezefi/codebreeze.fi",
+  "version": "0.0.0-development",
+  "description": "The Codebreeze website",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codefreezefi/codebreeze.fi.git"
+  },
+  "author": "The Codefreeze Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codefreezefi/codebreeze.fi/issues"
+  },
+  "homepage": "https://github.com/codefreezefi/codebreeze.fi#readme",
+  "dependencies": {
+    "@types/showdown": "^1.9.3",
+    "dotenv": "^8.0.0",
+    "node-fetch": "^2.6.0",
+    "showdown": "^1.9.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-angular": "^8.0.0",
+    "@nrfcloud/tslint-config": "^3.10.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^12.0.7",
+    "@types/node-fetch": "^2.3.5",
+    "husky": "^2.4.0",
+    "lint-staged": "^8.2.0",
+    "prettier": "^1.18.0",
+    "ts-loader": "^6.0.2",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "release": {
+    "branch": "saga",
+    "remoteTags": true,
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github"
+    ]
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "tslint --project ./tsconfig.json --fix",
+      "git add"
+    ]
+  }
+}
