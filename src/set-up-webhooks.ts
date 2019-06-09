@@ -24,8 +24,9 @@ Promise.all([
   }),
 ])
   .then(([_, cards]) =>
-    Promise.all(
-      cards.map(({ id, name }) =>
+    Promise.all([
+      // Notify about changes on cards in the list
+      ...cards.map(({ id, name }) =>
         api.webhooks.create({
           active: true,
           callbackURL: netlifyWebhook,
@@ -33,7 +34,14 @@ Promise.all([
           idModel: id,
         }),
       ),
-    ),
+      // Notify about changes to the list
+      api.webhooks.create({
+        active: true,
+        callbackURL: netlifyWebhook,
+        description: `Notify Netlify if Website Content list has changed`,
+        idModel: websiteContentList,
+      }),
+    ]),
   )
   .then(() =>
     api.tokens
