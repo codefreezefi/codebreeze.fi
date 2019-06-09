@@ -1,0 +1,19 @@
+language: node_js
+notifications:
+  email: false
+node_js: 'stable'
+install:
+  - npm ci
+before_script:
+  - export GK_LOCK_DEFAULT_BRANCH=development
+  - npm i -g greenkeeper-lockfile@2
+  - npx greenkeeper-lockfile-update
+script:
+  - npx tsc
+after_success:
+  - npx greenkeeper-lockfile-upload
+  - npm i semantic-release
+  - npx semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
