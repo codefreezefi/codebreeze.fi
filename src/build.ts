@@ -46,6 +46,9 @@ trelloApi({ apiKey, apiToken })
           gitRev: execSync('git rev-parse HEAD')
             .toString()
             .trim(),
+          release: execSync('git tag -l --points-at HEAD')
+            .toString()
+            .trim(),
           timestamp: new Date().toISOString(),
         } as const
 
