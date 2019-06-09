@@ -52,7 +52,13 @@ export const trelloApi = ({
       token: ({ token }: { token: string }) => ({
         webhooks: () =>
           query({ res: `tokens/${token}/webhooks` }) as Promise<
-            { id: string }[]
+            {
+              id: string
+              description: string
+              idModel: string
+              callbackURL: string
+              active: boolean,
+            }[]
           >,
       }),
     },

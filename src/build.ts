@@ -64,6 +64,13 @@ trelloApi({ apiKey, apiToken })
         netlifyWebhook,
         apiToken,
         apiKey,
+      }).then(webhooks => {
+        console.log('Active webhooks:')
+        webhooks.forEach(({ id, description, active }) => {
+          console.log(
+            `${id} (${active ? 'active' : 'inactive'}): ${description} `,
+          )
+        })
       }),
     ]),
   )
