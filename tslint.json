@@ -1,1 +1,9 @@
-{ "extends": "@nrfcloud/tslint-config" }
+{
+  "extends": "@nrfcloud/tslint-config",
+  "rules": {
+    "semicolon": [
+      true,
+      "never"
+    ]
+  }
+}

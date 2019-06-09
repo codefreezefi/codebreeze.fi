@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from 'node-fetch'
 
 export const trelloApi = ({
   apiKey,
@@ -10,7 +10,7 @@ export const trelloApi = ({
   const query = ({ res }: { res: string }) =>
     fetch(
       `https://api.trello.com/1/${res}?key=${apiKey}&token=${apiToken}`,
-    ).then(res => res.json());
+    ).then(res => res.json())
   return {
     lists: {
       cards: ({ list }: { list: string }) =>
@@ -18,5 +18,5 @@ export const trelloApi = ({
           { name: string; desc: string }[]
         >,
     },
-  };
-};
+  }
+}
