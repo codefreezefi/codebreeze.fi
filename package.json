@@ -4,7 +4,7 @@
   "description": "The Codebreeze website",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node dist/render-website.js",
+    "build": "node dist/build.js",
     "postinstall": "npx tsc"
   },
   "repository": {
