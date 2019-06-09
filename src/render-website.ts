@@ -10,6 +10,9 @@ const apiKey = process.env.API_KEY!;
 const apiToken = process.env.API_TOKEN!;
 const websiteContentList = process.env.WEBSITE_CONTENT_LIST!;
 
+const srcDir = path.join(__dirname, '..', 'src');
+const webDir = path.join(__dirname, '..', 'web');
+
 const fetchContentFromTrello = async () => {
   const cards = await trelloApi({ apiKey, apiToken }).lists.cards({
     list: websiteContentList,
@@ -23,11 +26,14 @@ fetchContentFromTrello()
   )
   .then(content => new showdown.Converter().makeHtml(content))
   .then(async contentAsMarkdown => {
-    const tpl = await fs.readFile(
-      path.join(__dirname, '..', 'src', 'index.html'),
-      'utf-8',
-    );
-    const targetFile = path.join(__dirname, '..', 'web', 'index.html');
+    try {
+      await fs.stat(webDir);
+    } catch {
+      await fs.mkdir(webDir);
+    }
+
+    const tpl = await fs.readFile(path.join(srcDir, 'index.html'), 'utf-8');
+    const targetFile = path.join(webDir, 'index.html');
     await fs.writeFile(
       targetFile,
       tpl.replace('{{content}}', contentAsMarkdown),
