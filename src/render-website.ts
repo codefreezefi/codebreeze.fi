@@ -3,6 +3,8 @@ import { config } from 'dotenv'
 import * as showdown from 'showdown'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+import { execSync } from 'child_process'
+import * as handlebars from 'handlebars'
 
 config()
 
@@ -34,11 +36,16 @@ fetchContentFromTrello()
 
     const tpl = await fs.readFile(path.join(srcDir, 'index.html'), 'utf-8')
     const targetFile = path.join(webDir, 'index.html')
-    await fs.writeFile(
-      targetFile,
-      tpl.replace('{{content}}', contentAsMarkdown),
-      'utf-8',
-    )
+
+    const content = {
+      content: contentAsMarkdown,
+      gitRev: execSync('git rev-parse HEAD')
+        .toString()
+        .trim(),
+      timestamp: new Date().toISOString(),
+    } as const
+
+    await fs.writeFile(targetFile, handlebars.compile(tpl)(content), 'utf-8')
     console.log(`${targetFile} written`)
   })
   .then(() => {
