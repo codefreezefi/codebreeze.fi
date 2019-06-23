@@ -1,0 +1,117 @@
+body {
+	font-family: 'Karla', sans-serif;
+	font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Lora', serif;
+	font-weight: 400;
+}
+
+strong {
+	font-weight: 700;
+}
+
+/* Headers (the images) */
+
+main > header {
+	position: relative;
+}
+
+main > header > img {
+	width: 100%;
+}
+
+main > header > section {
+	position: absolute;
+	bottom: 0;
+	margin: 2rem;
+	color: #fffffff0;
+	text-shadow: 0 0 4px #000000cc, 1px 0 4px #000000cc, 0 1px 4px #000000cc, 0 1px 4px #000000cc, 0 1px 4px #000000cc;
+}
+
+main > header > section p {
+	margin: 0;
+	font-weight: 700;
+}
+
+main > header > section img {
+	width: 100%;
+}
+
+@media (min-width: 600px) {
+	main > header {
+		max-height: 100%;
+		overflow: hidden;
+	}
+
+	main > header > section {
+		position: absolute;
+		display: grid;
+		width: 100%;
+		grid-template-columns: 1fr 600px 1fr;
+		grid-template-rows: 1fr;
+		margin: 0 0 8rem 0;
+		grid-auto-rows: auto;
+	}
+
+	main > header > section > * {
+		grid-column-start: 2;
+	}
+}
+
+/* Content */
+
+main > section {
+	margin: 4rem 2rem;
+}
+
+@media (min-width: 600px) {
+	main > section {
+		max-width: 600px;
+		margin: 8rem auto;
+	}
+}
+
+@media (min-width: 1200px) {
+	body {
+		font-size: 18pt;
+		line-height: 135%;
+	}
+
+	main > section {
+		max-width: 800px;
+		margin: 8rem auto;
+	}
+
+	main > header > section {
+		grid-template-columns: 1fr 800px 1fr;
+	}
+}
+
+blockquote {
+	margin: 0;
+	padding-left: 1rem;
+	font-family: 'Lora', serif;
+	color: #5d5d5d;
+	border: 4px solid #adadad;
+}
+
+/* Footer */
+
+footer section.meta {
+	text-align: center;
+	font-size: 10pt;
+	opacity: 0.5;
+}
+
+@media (min-width: 600px) {
+	footer section.meta p {
+		display: inline-block;
+		margin: 0;
+	}
+
+	footer section.meta p + p {
+		margin-left: 2rem;
+	}
+}

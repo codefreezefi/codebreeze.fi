@@ -5,7 +5,11 @@ import { promises as fs } from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 
-const converter = new showdown.Converter()
+const converter = new showdown.Converter({
+	simplifiedAutoLink: true,
+	excludeTrailingPunctuationFromURLs: true,
+	strikethrough: true,
+})
 const linkAttachment = (attachment: Attachment) =>
 	`[${attachment.name}](${attachment.url})`
 const isImage = (attachment: Attachment) => /^image\//.test(attachment.mimeType)
@@ -84,5 +88,12 @@ export const render = async ({
 		timestamp: new Date().toISOString(),
 	} as const
 
-	await fs.writeFile(targetFile, handlebars.compile(tpl)(content), 'utf-8')
+	await Promise.all([
+		fs.writeFile(targetFile, handlebars.compile(tpl)(content), 'utf-8'),
+		fs.writeFile(
+			path.join(webDir, 'styles.css'),
+			await fs.readFile(path.join(srcDir, 'styles.css')),
+			'utf-8',
+		),
+	])
 }
