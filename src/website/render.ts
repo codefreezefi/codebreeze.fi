@@ -1,9 +1,35 @@
 import * as showdown from 'showdown'
 import * as handlebars from 'handlebars'
-import { Card } from '../trello/api'
+import { Attachment, Card } from '../trello/api'
 import { promises as fs } from 'fs'
 import * as path from 'path'
-import { exec } from 'child_process'
+import { execSync } from 'child_process'
+
+const converter = new showdown.Converter()
+const linkAttachment = (attachment: Attachment) =>
+	`[${attachment.name}](${attachment.url})`
+const isImage = (attachment: Attachment) => /^image\//.test(attachment.mimeType)
+const imageAttachment = (
+	template: string,
+	card: Card,
+	attachment: Attachment,
+) => {
+	const srcset = attachment.previews.reduce(
+		(srcset, { width, url }) => ({
+			...srcset,
+			[`${width}w`]: url,
+		}),
+		{} as { [key: string]: string },
+	)
+	return handlebars.compile(template)({
+		...attachment,
+		srcset: Object.entries(srcset)
+			.map(([w, s]) => `${s} ${w}`)
+			.join(',\n'),
+		alt: card.name,
+		content: converter.makeHtml(card.desc),
+	})
+}
 
 /**
  * Render the website
@@ -17,23 +43,42 @@ export const render = async ({
 	webDir: string
 	srcDir: string
 }) => {
-	const contentFromCards = cards.reduce(
-		(content, { desc }) => `${content}\n\n${desc}`,
-		'',
-	)
-	const contentAsMarkdown = new showdown.Converter().makeHtml(contentFromCards)
 	try {
 		await fs.stat(webDir)
 	} catch {
 		await fs.mkdir(webDir)
 	}
 
-	const tpl = await fs.readFile(path.join(srcDir, 'index.html'), 'utf-8')
+	const [tpl, imageAttachmentTemplate] = await Promise.all([
+		fs.readFile(path.join(srcDir, 'index.html'), 'utf-8'),
+		fs.readFile(path.join(srcDir, 'image.html'), 'utf-8'),
+	])
 	const targetFile = path.join(webDir, 'index.html')
 
+	const contentFromCards = cards.reduce((content, card) => {
+		const { desc, attachments } = card
+		content = `${content}\n\n`
+		if (attachments && attachments.length) {
+			attachments.forEach(attachment => {
+				if (isImage(attachment)) {
+					content = `${content}\n${imageAttachment(
+						imageAttachmentTemplate,
+						card,
+						attachment,
+					)}`
+				} else {
+					content = `${content}\n${linkAttachment(attachment)}`
+				}
+			})
+		} else {
+			content = `${content}\n<section>${converter.makeHtml(desc)}</section>`
+		}
+		return content
+	}, '')
+
 	const content = {
-		content: contentAsMarkdown,
-		gitRev: await exec('git rev-parse HEAD')
+		content: contentFromCards,
+		gitRev: execSync('git rev-parse HEAD')
 			.toString()
 			.trim(),
 		timestamp: new Date().toISOString(),
