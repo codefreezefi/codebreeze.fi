@@ -4,6 +4,7 @@ import * as path from 'path'
 import { setUpWebhooks } from './trello-netlify-bridge/setUpWebhooks'
 import { cacheToFile } from './cache/cache-to-file'
 import { render } from './website/render'
+import { promises as fs } from 'fs'
 
 config()
 
@@ -18,10 +19,19 @@ const cacheLocation = path.join(webDir, 'cards.json')
 const cacheCards = cacheToFile<Card[]>(cacheLocation)
 const t = trelloApi({ apiKey, apiToken })
 
-t.lists
-	.cards({
-		list: websiteContentList,
-	})
+new Promise(async resolve => {
+	try {
+		await fs.stat(webDir)
+	} catch {
+		await fs.mkdir(webDir)
+	}
+	resolve()
+})
+	.then(() =>
+		t.lists.cards({
+			list: websiteContentList,
+		}),
+	)
 	.then(cards =>
 		Promise.all(
 			cards.map(card =>

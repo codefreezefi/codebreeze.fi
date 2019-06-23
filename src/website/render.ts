@@ -47,12 +47,6 @@ export const render = async ({
 	webDir: string
 	srcDir: string
 }) => {
-	try {
-		await fs.stat(webDir)
-	} catch {
-		await fs.mkdir(webDir)
-	}
-
 	const [tpl, imageAttachmentTemplate] = await Promise.all([
 		fs.readFile(path.join(srcDir, 'index.html'), 'utf-8'),
 		fs.readFile(path.join(srcDir, 'image.html'), 'utf-8'),
