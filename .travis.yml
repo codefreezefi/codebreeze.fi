@@ -5,7 +5,7 @@ node_js: 'stable'
 install:
   - npm ci
 before_script:
-  - export GK_LOCK_DEFAULT_BRANCH=development
+  - export GK_LOCK_DEFAULT_BRANCH=saga
   - npm i -g greenkeeper-lockfile@2
   - npx greenkeeper-lockfile-update
 script:
