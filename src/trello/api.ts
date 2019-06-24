@@ -8,7 +8,23 @@ export type Card = {
 	badges: {
 		attachments: number
 	}
+	customFieldItems?: CustomFieldItem[]
 	attachments?: Attachment[]
+}
+
+// https://developers.trello.com/docs/getting-started-custom-fields#section-custom-field-values-on-cards
+export type CustomFieldItem = {
+	id: string
+	value: {
+		text?: string
+		number?: string
+		date?: string
+		checked?: 'true'
+		list?: string[]
+	}
+	idCustomField: string
+	idModel: string
+	modelType: 'card' | 'board'
 }
 
 export type Attachment = {
@@ -59,7 +75,8 @@ export const trelloApi = ({
 			options,
 		)
 
-	const query = (args: { res: string }) => f(args).then(res => res.json())
+	const query = (args: { res: string; query?: { [key: string]: any } }) =>
+		f(args).then(res => res.json())
 
 	const del = (args: { res: string }) =>
 		f({
@@ -75,7 +92,12 @@ export const trelloApi = ({
 	return {
 		lists: {
 			cards: ({ list }: { list: string }) =>
-				query({ res: `lists/${list}/cards` }) as Promise<Card[]>,
+				query({
+					res: `lists/${list}/cards`,
+					query: {
+						customFieldItems: true,
+					},
+				}) as Promise<Card[]>,
 		},
 		tokens: {
 			token: ({ token }: { token: string }) => ({
