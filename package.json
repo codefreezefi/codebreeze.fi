@@ -22,7 +22,7 @@
   "dependencies": {
     "@types/showdown": "^1.9.3",
     "dotenv": "^8.0.0",
-    "handlebars": "^4.1.2",
+    "handlebars": "4.7.2",
     "node-fetch": "^2.6.0",
     "showdown": "^1.9.0"
   },
